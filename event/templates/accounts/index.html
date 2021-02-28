@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 style="margin: 30px;"> Welcome {{user}} here You can see all the events </h1>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+        integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+        crossorigin="anonymous" />
+
+<div class="container" >
+    {% for y,stats in fgh.items %}
+    <div  style="width: auto;padding: 40px;margin: 40px; height: auto; box-shadow: inset;border-style: solid;border-color: rgb(201, 76, 76); background-color: blanchedalmond;" >
+    
+        <h3> {{ y.event_name }} </h3> Created by  {{ y.user.username }}
+        
+        <span id="like{{y.id}}">
+            {% if stats %}
+            <style>
+                #like{{y.id}}light{
+                    display: none;
+                }
+            </style>
+            {% else %}
+            <style>
+                #like{{y.id}}dark{
+                    display: none;
+                }
+            </style>
+            {% endif %}
+    
+            <span  id="like{{y.id}}light">♡</span>
+            <span id="like{{y.id}}dark">❤️</span>
+        </span>
+        <span id="like{{y.id}}st" name="{{y.id}}"> Liked by {{ y.count_likes }} </span>
+    
+        <script text="javascript">
+            $(document).ready(function () {
+
+                $('#like{{y.id}}').click(function () {
+                    $.ajax(
+                        {
+
+                            type: "POST",
+                            url: "{% url 'ans-like' %}",
+                            data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'pk': '{{ y.id }}' },
+
+                            success: function (response) {
+                                console.log("hjk");
+                                // alert(response.message);
+                                // alert('Company likes count is now ' + response.likes_count);
+                                console.log("ctx");
+                                console.log(response);
+                                console.log(response.ctx);
+                                $('#like{{y.id}}st').html("Liked by " + response.ctx);
+                                console.log(response.sta);
+                                if (response.sta) {
+                                    $("#like{{y.id}}light").hide();
+                                    $("#like{{y.id}}dark").show();
+                                }
+                                else {
+                                    $("#like{{y.id}}dark").hide();
+                                    $("#like{{y.id}}light").show();
+                                }
+
+                                // alert("You liked a ans ")
+
+                            },
+                            error: function (rs, e) {
+                                console.log("hh");
+                                // alert(rs.responseText);
+
+                            }
+                        }
+                    );
+                }
+                )
+            });
+        </script>
+        <br>
+    <h6> Location - {{y.location}} <br>
+    Time - {{ y.time }} </h6>
+    <h6>About this Event</h6>
+    <img src="{{ y.image.url }}" width="200" height="121" alt="{{y.event_name}}" >
+ 
+    <p> {{ y.data }} </p>
+    
+        <br>
+        </div>
+        <br>
+        {% endfor %}
+    
+</div>
+
+{% endblock %}
