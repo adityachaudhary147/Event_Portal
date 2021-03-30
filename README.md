@@ -1,4 +1,4 @@
-# Submission
+# EventAPP
  .
  Screenshot of the running project 
 ![alt text](https://github.com/adityachaudhary147/Submission/blob/main/Images/Screenshot%202021-02-28%20204438.png)
